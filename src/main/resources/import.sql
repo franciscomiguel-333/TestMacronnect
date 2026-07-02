@@ -1,0 +1,1 @@
+INSERT IGNORE INTO usuarios (id, username, password) VALUES (1, 'admin_ventas', 'clave_segura_123');
