@@ -25,6 +25,8 @@ public class Cliente {
 
     @NotBlank(message = "El correo es obligatorio")
     @Email(message = "El formato del correo no es válido")
+    @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$",
+            message = "El correo debe incluir una extensión válida (ejemplo: .com, .net)")
     @Size(max = 200, message = "El correo no puede superar los 200 caracteres")
     @Column(unique = true, nullable = false, length = 200)
     private String email;
