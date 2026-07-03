@@ -41,14 +41,27 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     @Transactional
-    public ClienteDTO actualizar(String correo, ClienteDTO clienteDTO) {
+    public ClienteDTO actualizar(String correo, ClienteDTO dto) {
         Cliente cliente = clienteRepository.findByEmail(correo)
                 .orElseThrow(() -> new IllegalArgumentException("No se encontró el correo en la base de datos"));
 
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setActivo(clienteDTO.isActivo());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setDireccion(clienteDTO.getDireccion());
+        if (!cliente.getEmail().equals(dto.getEmail())) {
+            if (clienteRepository.existsByEmail(dto.getEmail())) {
+                throw new IllegalArgumentException("El correo electrónico al que quiere actualizar ya está registrado por otro usuario");
+            }
+        }
+
+        if (!cliente.getTelefono().equals(dto.getTelefono())) {
+            if (clienteRepository.existsByTelefono(dto.getTelefono())) {
+                throw new IllegalArgumentException("El teléfono al que quiere actualizar ya está registrado por otro usuario");
+            }
+        }
+
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setActivo(dto.isActivo());
+        cliente.setTelefono(dto.getTelefono());
+        cliente.setDireccion(dto.getDireccion());
+        cliente.setEmail(dto.getEmail());
         return mapearADto(clienteRepository.save(cliente));
     }
 
