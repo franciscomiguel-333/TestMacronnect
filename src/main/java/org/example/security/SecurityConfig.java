@@ -17,7 +17,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
                 .antMatchers("/api/clientes/**").permitAll()
-                .antMatchers("/api/articulos/**").permitAll() // <-- AGREGA ESTA LÍNEA EXACTA
+                .antMatchers("/api/articulos/**").permitAll()
+                .antMatchers("/api/ventas/**").permitAll() // 🛠️ ¡AGREGA ESTA LÍNEA EXACTA!
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().and()
