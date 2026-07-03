@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mysql-db:
     image: mysql:8.0
@@ -13,7 +11,26 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - mysql_data_limpio:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-padmin"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: contenedor_app_ventas
+    restart: on-failure
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/db_ventas?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: user_ventas
+      SPRING_DATASOURCE_PASSWORD: user12345
 
 volumes:
-  mysql_data:
+  mysql_data_limpio:

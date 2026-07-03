@@ -1,0 +1,36 @@
+# Maven
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+.settings/
+.classpath
+.project
+.factorypath
+.apt_generated
+.springBeans
+.sts4-cache
+
+# Git
+.git/
+.gitignore
+
+# Docker (no hace falta que se copien a sí mismos)
+Dockerfile
+docker-compose.yaml
+.dockerignore
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Kotlin 
+.kotlin

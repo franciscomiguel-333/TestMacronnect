@@ -33,10 +33,19 @@ public class JwtFilter extends OncePerRequestFilter  {
         String email = null;
 
         // Valida y comprueba el formato del Bearer
-        if (headerAuthorization != null && headerAuthorization.startsWith("Bearer ")) {
-            token = headerAuthorization.substring(7); // Recorta la palabra "Bearer " para quedarse solo con el token
+        if (headerAuthorization != null) {
+            // SI EL USUARIO PEGA EL TOKEN DIRECTO EN SWAGGER:
+            // La cabecera llegará simplemente como "Authorization: eyJhbGci..."
+            if (!headerAuthorization.startsWith("Bearer ")) {
+                token = headerAuthorization; // El token es la cabecera completa sin recortes
+            } else {
+                // Por si acaso haces pruebas desde Postman usando el botón 'Bearer Token' nativo
+                token = headerAuthorization.substring(7);
+            }
+
+            // Validamos el token extraído
             if (jwtProvider.validarToken(token)) {
-                email = jwtProvider.obtenerEmailDelToken(token); // Descifra el email guardado
+                email = jwtProvider.obtenerEmailDelToken(token);
             }
         }
 
