@@ -14,7 +14,6 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring-boot.version>2.7.18</spring-boot.version>
-        <jjwt.version>0.9.1</jjwt.version>
     </properties>
 
     <!-- Control de versiones de Spring Boot sin herencias externas -->
@@ -77,12 +76,6 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Librería de soporte para tokens JWT -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-            <version>${jjwt.version}</version>
-        </dependency>
 
         <!-- OpenAPI / Swagger para documentación y pruebas de la API -->
         <dependency>
@@ -91,6 +84,25 @@
             <version>3.0.0</version>
         </dependency>
 
+
+        <!-- Java JWT (io.jsonwebtoken) para crear y validar los Tokens -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+            <version>0.11.5</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <version>0.11.5</version>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
     <build>
