@@ -2,12 +2,12 @@ package org.example.service;
 
 import org.example.model.dto.VentaDTO;
 import org.example.model.dto.VentaDetalleDTO;
-import org.example.model.entity.Articulo;
-import org.example.model.entity.Cliente;
-import org.example.model.entity.Venta;
-import org.example.model.entity.VentaDetalle;
+import org.example.model.dto.VentaDetalleRequestDTO;
+import org.example.model.dto.VentaRequestDTO;
+import org.example.model.entity.*;
 import org.example.repository.ArticuloRepository;
 import org.example.repository.ClienteRepository;
+import org.example.repository.FolioRepository;
 import org.example.repository.VentaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -31,9 +31,12 @@ public class VentaServiceImpl implements VentaService  {
     @Autowired
     private ArticuloRepository articuloRepository;
 
+    @Autowired
+    private FolioRepository folioRepository;
+
     @Override
     @Transactional
-    public VentaDTO registrar(VentaDTO dto) {
+    public VentaDTO registrar(VentaRequestDTO dto) {
 
         if (dto.getDetalles() == null || dto.getDetalles().isEmpty()) {
             throw new IllegalArgumentException("No se puede registrar una venta sin líneas de detalle");
@@ -41,7 +44,7 @@ public class VentaServiceImpl implements VentaService  {
 
         //Para validar si se repite un articulo en los detalles, los agrupamos primero
         Map<String, Integer> cantidadesAgrupadas = new HashMap<>();
-        for (VentaDetalleDTO dDto : dto.getDetalles()) {
+        for (VentaDetalleRequestDTO dDto : dto.getDetalles()) {
             String codigo = dDto.getArticuloCodigo();
             cantidadesAgrupadas.put(codigo, cantidadesAgrupadas.getOrDefault(codigo, 0) + dDto.getCantidad());
         }
@@ -93,6 +96,11 @@ public class VentaServiceImpl implements VentaService  {
         }
 
         venta.setTotal(totalVenta);
+        Folio folio = folioRepository.findByNombre("Venta")
+                .orElseThrow(() -> new IllegalArgumentException("Error interno al obtener el folio Venta"));
+        venta.setFolio(folio.getFolio());
+        folio.setFolio(folio.getFolio() + 1);
+        folioRepository.save(folio);
         Venta ventaGuardada = ventaRepository.save(venta);
         return mapearADto(ventaGuardada);
     }

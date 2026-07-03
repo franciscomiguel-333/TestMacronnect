@@ -1,6 +1,10 @@
 package org.example.controller;
 
 import org.example.model.dto.VentaDTO;
+import org.example.model.dto.VentaDetalleDTO;
+import org.example.model.dto.VentaDetalleRequestDTO;
+import org.example.model.dto.VentaRequestDTO;
+import org.example.model.entity.Venta;
 import org.example.service.VentaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,9 +22,9 @@ public class VentaController {
     private VentaService ventaService;
 
     @PostMapping
-    public ResponseEntity<VentaDTO> registrar(@Valid @RequestBody VentaDTO dto) {
-        VentaDTO nuevaVenta = ventaService.registrar(dto);
-        return new ResponseEntity<>(nuevaVenta, HttpStatus.CREATED); // HTTP 201
+    public ResponseEntity<VentaDTO> registrar(@Valid @RequestBody VentaRequestDTO dto) {
+        VentaDTO respuesta = ventaService.registrar(dto);
+        return new ResponseEntity<>(respuesta, HttpStatus.CREATED); // HTTP 201
     }
 
     @GetMapping

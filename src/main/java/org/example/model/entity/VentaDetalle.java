@@ -1,5 +1,7 @@
 package org.example.model.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 
@@ -10,6 +12,7 @@ public class VentaDetalle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(hidden = true)
     private Long id;
 
     // Relación con el Maestro: Muchas líneas de detalle le pertenecen a una sola Venta
@@ -26,9 +29,11 @@ public class VentaDetalle {
     private Integer cantidad;
 
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
+    @Schema(hidden = true)
     private BigDecimal precioUnitario;
 
     @Column(nullable = false, precision = 10, scale = 2)
+    @Schema(hidden = true)
     private BigDecimal subtotal;
 
     public VentaDetalle() {}

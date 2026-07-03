@@ -10,12 +10,12 @@ import java.util.List;
 @Table(name = "ventas")
 public class Venta {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false, insertable = false, updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false, insertable = true)
     private Long folio;
 
     @Column(nullable = false)

@@ -6,6 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VentaDTO {
@@ -22,8 +23,7 @@ public class VentaDTO {
 
     @NotEmpty(message = "La venta debe incluir al menos un artículo en el detalle")
     @Valid // Activa las validaciones dentro de los detalles
-    private List<VentaDetalleDTO> detalles;
-
+    private List<VentaDetalleDTO> detalles = new ArrayList<>();
     public VentaDTO() {}
 
     // Getters y Setters...
