@@ -1,55 +1,41 @@
-package org.example.model.entity;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
+package org.example.model.dto;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "articulos")
-public class Articulo {
+public class ArticuloDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank(message = "El código es obligatorio")
-    @Column(unique = true, nullable = false, length = 10)
+    @NotBlank(message = "El cógido es obligatorio")
     private String codigo;
 
     @NotBlank(message = "El nombre es obligatorio")
     @Size(max = 200, message = "El nombre no puede superar los 500 caracteres")
-    @Column( nullable = false, length = 200)
     private String nombre;
 
     @NotBlank(message = "La descripcion es obligatoria")
     @Size(max = 1000, message = "La descripción no puede superar los 500 caracteres")
-    @Column( nullable = false, length = 1000)
     private String descripcion;
 
     @NotNull(message = "El precio es obligatorio")
     @DecimalMin(value = "0.01", message = "El precio debe ser mayor a cero")
-    @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal precio;
 
     @NotNull(message = "El stock es obligatorio")
     @Min(value = 0, message = "El stock no puede ser menor a cero")
-    @Column(nullable = false)
     private Integer stock;
 
-    public boolean isActivo() {
-        return activo;
-    }
 
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-
-    @Column(nullable = false)
-    private boolean activo = true; // En el Entity (por defecto true)
+    private boolean activo = true; // En el Entity
 
 
 
-    // Getters y Setters
+    //Getters and setters
+
+    private Long id;
+
     public Long getId() {
         return id;
     }
@@ -98,6 +84,6 @@ public class Articulo {
         this.stock = stock;
     }
 
-
-
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
 }

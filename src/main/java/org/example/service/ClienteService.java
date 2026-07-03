@@ -7,10 +7,16 @@ import org.springframework.data.domain.Pageable;
 
 public interface ClienteService {
 
-    // Registrar
+    //Insert
     ClienteDTO registrar(ClienteDTO clienteDTO);
-
-    // Listado)
+    //GetAll
     Page<ClienteDTO> obtenerClientes(Pageable pageable);
+    //Update
+    ClienteDTO actualizar(String correo, ClienteDTO clienteDTO);
+    //Baja
+    void darDeBaja(String correo);
+    //Reactivar
+    void reactivar(String correo);
 
+    ClienteDTO obtenerByEmail(String email);
 }

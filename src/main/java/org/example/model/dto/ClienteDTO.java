@@ -27,6 +27,8 @@ public class ClienteDTO {
     @Size(max = 1000, message = "La dirección no puede superar los 1000 caracteres")
     private String direccion;
 
+    private boolean activo = true; // En el Entity
+
     // Constructor vacío obligatorio
     public ClienteDTO() {}
 
@@ -45,5 +47,10 @@ public class ClienteDTO {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public boolean isActivo() { return activo; }
+    public void setActivo(boolean activo) { this.activo = activo; }
+
+
 
 }

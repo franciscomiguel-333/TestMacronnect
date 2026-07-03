@@ -44,6 +44,12 @@ public class Cliente {
     @Column(nullable = false, length = 1000)
     private String direccion;
 
+
+    @Column(nullable = false)
+    private boolean activo = true; // En el Entity (por defecto true)
+
+
+
     public Cliente(){}
 
     public Long getId() { return id; }
@@ -60,6 +66,14 @@ public class Cliente {
 
     public String getDireccion() { return direccion; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
+    }
 
 
 }

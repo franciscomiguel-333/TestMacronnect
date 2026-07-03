@@ -13,20 +13,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // 1. Apagamos CSRF porque usaremos JWT más adelante
                 .csrf().disable()
-
-                // 2. Autorizamos las rutas en la API
                 .authorizeRequests()
-
-                // Permitimos acceso total a todo lo relacionado con Swagger para poder probar
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**").permitAll()
-
-                // Cualquier otra petición (como /api/clientes) requerirá autenticación por ahora
+                .antMatchers("/api/clientes/**").permitAll()
+                .antMatchers("/api/articulos/**").permitAll() // <-- AGREGA ESTA LÍNEA EXACTA
                 .anyRequest().authenticated()
-
                 .and()
-                // Mantenemos el formulario de login básico temporalmente para las pruebas
                 .formLogin().and()
                 .httpBasic();
     }
