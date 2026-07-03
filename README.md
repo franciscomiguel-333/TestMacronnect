@@ -83,6 +83,29 @@ docker-compose down -v
 - La documentación interactiva de la API (Swagger/OpenAPI) permite probar todos los endpoints directamente desde el navegador, sin necesidad de Postman u otras herramientas.
 - Puertos utilizados: `8080` (API) y `3306` (MySQL). Verifica que no estén ocupados por otro proceso antes de iniciar.
 
+## Cómo correr los tests
+
+Los tests unitarios (JUnit + Mockito) se ejecutan dentro del contenedor durante el build de Maven. Si quieres correrlos por separado, con Docker:
+
+```bash
+docker run --rm -v ${PWD}:/app -w /app maven:3.8.7-eclipse-temurin-8 mvn test
+```
+
+## Decisiones de diseño
+
+- **DTOs separados de las entidades**: se crearon `VentaRequestDTO`, `VentaDetalleRequestDTO` (y equivalentes de respuesta) en lugar de exponer las entidades JPA directamente en los controllers. Esto evita filtrar campos internos (`id`, `folio`, `total`) en los requests y desacopla el modelo de persistencia del contrato de la API.
+- **Tabla `folios` independiente**: en lugar de usar un simple `@GeneratedValue` para el folio de venta, se implementó una tabla dedicada (`folios`) que guarda el nombre del tipo de documento y su último incremental. La razón es pensar a futuro: si el sistema llegara a necesitar folios para otros documentos (facturas, notas de crédito, etc.), cada uno puede tener su propio incremental independiente sin duplicar lógica. Ademas de evitar posible duplicados, cada transaccion de venta obtiene su folio aunque esten corriendo en paralelo. Para insertar siempre el primer valor se puede configurar en resources en el import.sql, se pueden agregar más campos.
+- **Autenticación JWT con usuario mínimo**: se optó por un usuario fijo/tabla mínima (`usuarios`) para enfocarme las demas funciones y usar uno por defecto insertado la primera vez que se ejecuta el programa en la base de datos, se puede configurar en el import.sql del resources.
+- **Entrega vía Docker**: se agregó `Dockerfile` (multi-stage: build con Maven + runtime solo con JRE) y `docker-compose.yaml` (API + MySQL con healthcheck) para que el proyecto se pueda levantar con un solo comando (`docker-compose up --build`), tambien se agrego Iniciar.bat para que sea más directo.
+
+## Qué haría distinto con más tiempo
+
+1. **Encriptar la contraseña del usuario**: actualmente la contraseña se guarda en texto plano en la tabla `usuarios`, ya que no era un requisito obligatorio de la prueba y el dato inicial se cargó directamente vía `import.sql`. Sí se dejó preparada una clase para el manejo de hashing con BCrypt, pero no llegó a integrarse en el flujo de login/alta. Con más tiempo, la conectaría por completo (`BCryptPasswordEncoder` de Spring Security) tanto para el alta como para la validación en el login.
+2. **Manejo de roles**: agregar un esquema de roles (por ejemplo `ADMIN`, `VENDEDOR`) para diferenciar permisos entre endpoints, en lugar de un único usuario con acceso total.
+3. **Profundizar el manejo de folios**: la tabla `folios` actual es un primer acercamiento a un manejo multi-documento (basado en experiencia previa con sistemas de facturación), pero valdría la pena investigar patrones más robustos para concurrencia alta (por ejemplo, bloqueos optimistas o secuencias a nivel de base de datos) para evitar folios duplicados bajo carga.
+4. **Reforzar la configuración de seguridad**: revisar en más detalle la configuración de Spring Security (manejo de excepciones de autenticación/autorización, expiración y refresh de tokens, CORS) para acercarla a un estándar más productivo.
+5. **Tests de integración sobre los controllers**: Investigar más sobre mejoras de los test ya que estoy poco familiarizado.
+6. **Evitar credenciales hardcodeadas en el repositorio**: el usuario admin y su contraseña se cargan actualmente desde `import.sql`, lo cual es práctico para esta entrega pero no sería aceptable en un ambiente real, ya que el repositorio es público y expone la credencial inicial. Con más tiempo, movería estos valores a variables de entorno o un mecanismo de inicialización que no quede versionado en el código (por ejemplo, generar la contraseña en el primer arranque o inyectarla vía secretos de Docker).
 ## Contacto
 
 Ante cualquier duda o problema al ejecutar el proyecto, no dudes en contactarme.
